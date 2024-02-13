@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Inventory_Management_system.Models.tblPurchase>
+
+@{
+    ViewBag.Title = "DisplayStock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>DisplayStock</h4>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Product Name")
+        </th>
+        <th>
+            @Html.DisplayName("Quantity")
+        </th>
+        <th>
+            @Html.DisplayName("Date")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchase_pro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchase_qnty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchase_date)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "StockDetails", new { id = item.id }, new { @class = "btn btn-success" })
+            </td>
+        </tr>
+    }
+
+</table>

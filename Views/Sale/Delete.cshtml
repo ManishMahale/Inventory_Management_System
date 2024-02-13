@@ -1,0 +1,43 @@
+﻿@model Inventory_Management_system.Models.tblSale
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>tblSale</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Sale_prod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sale_prod)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sale_qnty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sale_qnty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sale_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sale_date)
+        </dd>
+
+    </dl>
+
+    <br />
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> &nbsp;
+            @Html.ActionLink("Back to List", "Index", new {}, new { @class = "btn btn-secondary" })
+        </div>
+    }
+</div>

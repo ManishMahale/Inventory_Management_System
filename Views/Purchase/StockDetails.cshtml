@@ -1,0 +1,42 @@
+﻿@model Inventory_Management_system.Models.tblPurchase
+
+@{
+    ViewBag.Title = "StockDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Stock Details</h4>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Product Name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purchase_pro)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Quantity")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purchase_qnty)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Date")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purchase_date)
+        </dd>
+
+    </dl>
+</div>
+<br />
+<p>
+    @Html.ActionLink("Back to List", "DisplayStock", new {}, new { @class = "btn btn-secondary" })
+</p>

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Inventory_Management_system.Models.tblPurchase>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Stock</h4>
+
+<p>
+    @Html.ActionLink("Add New Stock", "PurchaseProduct", new { }, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Product Name")
+        </th>
+        <th>
+            @Html.DisplayName("Quantity")
+        </th>
+        <th>
+            @Html.DisplayName("Date")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchase_pro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchase_qnty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchase_date)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;
+                @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "btn btn-success" }) &nbsp;
+                @Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>
