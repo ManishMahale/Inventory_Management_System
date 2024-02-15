@@ -40,6 +40,7 @@ namespace Inventory_Management_system.Controllers
         [HttpPost]
         public ActionResult PurchaseProduct(tblPurchase ps)
         {
+            ps.Purchase_date = DateTime.Now;
             db.tblPurchases.Add(ps);
             db.SaveChanges();
             return RedirectToAction("index");
@@ -76,7 +77,7 @@ namespace Inventory_Management_system.Controllers
 
             tblPurchase obj = db.tblPurchases.SingleOrDefault(x => x.id == ps.id);
             obj.Purchase_qnty = ps.Purchase_qnty;
-            obj.Purchase_date = ps.Purchase_date;
+            
             obj.Purchase_pro = ps.Purchase_pro;
             db.SaveChanges();
             return RedirectToAction("index");

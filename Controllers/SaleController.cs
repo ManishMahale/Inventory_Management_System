@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace Inventory_Management_system.Controllers
 {
@@ -33,14 +34,15 @@ namespace Inventory_Management_system.Controllers
         public ActionResult SaleProduct(tblSale s)
         {
             int saleQuantity = int.Parse(s.Sale_qnty);
-            if(1 > saleQuantity)
+            if (1 > saleQuantity)
             {
                 TempData["zero"] = "Sale Qantity Should be More then 0";
                 return RedirectToAction("SaleProduct");
             }
+            s.Sale_date = DateTime.Now;
             var name = s.Sale_prod;
-            var purchaseQuantity = db.tblPurchases.Where(p => p.Purchase_pro == name).Select(p => p.Purchase_qnty).FirstOrDefault();
-            int pQ = int.Parse(purchaseQuantity);
+            var purchaseQuantity = db.tblPurchases.Where(p => p.Purchase_pro == name).Select(p => p.Purchase_qnty).FirstOrDefault(); //total stock
+            int pQ = int.Parse(purchaseQuantity); //convert Purchase stock to int
 
             TempData["Stock"] = pQ;
             TempData["msg"] = "Available Stock is : ";
@@ -51,18 +53,19 @@ namespace Inventory_Management_system.Controllers
             }
             else
             {
-                int updateStock = pQ - saleQuantity;
+                int updateStock = pQ - saleQuantity; // new stock after sale
+
                 var productToUpdate = db.tblPurchases.FirstOrDefault(x => x.Purchase_pro == name);
                 if (productToUpdate != null)
                 {
-                    
+
                     productToUpdate.Purchase_qnty = updateStock.ToString();
                     db.tblSales.Add(s);
                     db.SaveChanges();
                     return RedirectToAction("index");
                 }
             }
-            
+
             return RedirectToAction("index");
         }
 
@@ -89,28 +92,60 @@ namespace Inventory_Management_system.Controllers
         [HttpPost]
         public ActionResult Edit(tblSale s)
         {
-            var prod = db.tblPurchases.Select(x => x.Purchase_pro).ToList(); //to deopdown menu of product
+            var prod = db.tblPurchases.Select(x => x.Purchase_pro).ToList(); //to dropdown menu of product
             ViewBag.ProductName = new SelectList(prod);
 
-            //tblPurchase obj = new tblPurchase();
-            // obj = db.tblPurchases.Find(ps.id);
+
 
             tblSale obj = db.tblSales.SingleOrDefault(x => x.id == s.id);
-            obj.Sale_date = s.Sale_date;
-            obj.Sale_prod = s.Sale_prod;
-            obj.Sale_qnty = s.Sale_qnty;
-            db.SaveChanges();
+            int preSale = int.Parse(obj.Sale_qnty); //previous sale qnty
+
+            var name = s.Sale_prod;
+
+            var TotalQuantity = db.tblPurchases.Where(x => x.Purchase_pro == name).Select(x => x.Purchase_qnty).FirstOrDefault(); //total stock 
+            int NewTotal = int.Parse(TotalQuantity); // new total convert to int
+
+            int UpdateSale = int.Parse(s.Sale_qnty); // edited Sale Quantity // new qnty
+
+            int NewDifferece;
+            if (preSale > UpdateSale)
+            {
+                NewDifferece = preSale - UpdateSale;
+                NewTotal -= NewDifferece;
+            }
+            else
+            {
+                NewDifferece = UpdateSale - preSale;
+                NewTotal -= NewDifferece;
+            }
+            ////
+            var productToUpdate = db.tblPurchases.FirstOrDefault(x => x.Purchase_pro == name);
+            if (productToUpdate != null)
+            {
+                productToUpdate.Purchase_qnty = NewTotal.ToString();
+
+                //////
+
+                //db.tblSales.Add(s);
+                //----- OR -----//
+                obj.Sale_qnty = s.Sale_qnty;
+
+                //////////
+
+                db.SaveChanges();
+                return RedirectToAction("index");
+            }
             return RedirectToAction("index");
 
 
-            //-------------------- OR --------------------- 
+            //-------------------- OR ---------------------  
             //if (ModelState.IsValid)
             //{
-            //    db.Entry(ps).State = EntityState.Modified;
+            //  db.Entry(s).State = EntityState.Modified;   //To Save Changes
             //    return RedirectToAction("Index");
             //}
 
-            //return View(ps);
+            //return View(s);
         }
 
         [HttpGet]
